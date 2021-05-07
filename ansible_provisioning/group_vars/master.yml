@@ -1,0 +1,5 @@
+---
+tcp_ports_semanage:
+  - 6443
+  - 9345
+  

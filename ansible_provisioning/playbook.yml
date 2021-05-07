@@ -1,0 +1,17 @@
+---
+- hosts: master
+  become: true
+  roles:
+      - update
+      - create_users
+      - semanage
+      - nginx
+
+- hosts: rke
+  become: true
+  roles:
+      - update
+      - create_users
+      - semanage
+      - rke2
+      

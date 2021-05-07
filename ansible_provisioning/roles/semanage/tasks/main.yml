@@ -1,0 +1,42 @@
+---
+- name: Check if there file contains [keyfile]
+  command: grep -Fxq "[keyfile]" /etc/NetworkManager/NetworkManager.conf
+  register: checkconf
+  ignore_errors: yes
+  changed_when: no
+
+- name: modify network manager config 
+  lineinfile:
+    path: /etc/NetworkManager/NetworkManager.conf
+    line: |
+      [keyfile]
+      unmanaged-devices=interface-name:cali*;interface-name:flannel*
+  when: checkconf.rc ==0
+
+- name: restart Network Manager
+  ansible.builtin.systemd:
+    name: NetworkManager.service
+    enabled: yes
+    state: restarted
+
+- name: Stop firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+
+- name: ensure semanage is installed
+  yum:
+    name: policycoreutils-python-2.5-34.el7.x86_64
+    state: present
+    update_cache: true
+
+- name: Allow rke needed ports in selinux
+  command: semanage port -a -t http_port_t -p tcp {{ item }}
+  with_items: "{{ tcp_ports_semanage }}"
+  ignore_errors: True
+    
+- name: Allow rke2 udp ports
+  command: semanage port -a -t http_port_t -p udp {{ item }}
+  with_items: "{{ udp_ports_semanage }}"
+  ignore_errors: True

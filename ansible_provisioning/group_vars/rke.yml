@@ -1,0 +1,10 @@
+---
+tcp_ports_semanage:
+  - 2379
+  - 2380
+  - 6443
+  - 9345
+  - 30000-32767
+
+udp_ports_semanage:
+  - 8472

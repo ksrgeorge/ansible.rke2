@@ -1,0 +1,21 @@
+events {}
+http {
+   upstream backend {
+      server 10.50.10.11; 
+      server 10.50.10.12;
+      server 10.50.10.13;
+   }
+
+   # This server accepts all traffic to port 80 and passes it to the upstream. 
+   # Notice that the upstream name and the proxy_pass need to match.
+
+   server {
+      listen 80;
+      listen 9345;
+      listen 6443;
+
+      location / {
+          proxy_pass http://backend;
+      }
+   }
+}

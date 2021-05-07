@@ -1,0 +1,13 @@
+[all]
+kubemaster ansible_port=22 ansible_host=10.50.10.10 
+node1 ansible_port=22 ansible_host=10.50.10.11 
+node2 ansible_port=22 ansible_host=10.50.10.12 
+node3 ansible_port=22 ansible_host=10.50.10.13 
+
+[master]
+kubemaster ansible_port=22 ansible_host=10.50.10.10 
+
+[rke]
+node1 ansible_port=22 ansible_host=10.50.10.11 
+node2 ansible_port=22 ansible_host=10.50.10.12 
+node3 ansible_port=22 ansible_host=10.50.10.13 

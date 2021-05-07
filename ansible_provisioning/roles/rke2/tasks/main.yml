@@ -1,0 +1,31 @@
+---
+- name: Create the images directory
+  file:
+    path: /var/lib/rancher/rke2/agent/images
+    state: directory
+
+- name: download rke2 images
+  get_url: 
+    url: "https://github.com/rancher/rke2/releases/download/{{ rke_version | urlencode }}/rke2-images.linux-amd64.tar.gz"
+    dest: /var/lib/rancher/rke2/agent/images/rke2-images.linux-amd64.tar.gz
+
+- name: Create an rke2 directory
+  file:
+    path: /etc/rancher/rke2
+    state: directory
+
+- name: Create config file
+  template:
+    src: config.yml.j2
+    dest: /etc/rancher/rke2/config.yml
+
+- name: download rke2 binary
+  get_url: 
+    url: "https://github.com/rancher/rke2/releases/download/{{ rke_version | urlencode }}/rke2.linux-amd64"
+    dest: /usr/local/bin/rke2
+
+- name: Making RKE2 executable
+  file:
+    dest: /usr/local/bin/rke2
+    mode: a+x
+
