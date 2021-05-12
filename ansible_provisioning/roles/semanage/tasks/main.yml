@@ -25,6 +25,12 @@
     enabled: no
     state: stopped
 
+- name: install selinux rke2 policy
+  yum:
+    name: https://github.com/rancher/rke2-selinux/releases/download/v0.4.stable.1/rke2-selinux-0.4-1.el7.noarch.rpm
+    state: present
+    update_cache: true
+
 - name: ensure semanage is installed
   yum:
     name: policycoreutils-python-2.5-34.el7.x86_64

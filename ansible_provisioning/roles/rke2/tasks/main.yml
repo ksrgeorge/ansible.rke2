@@ -16,7 +16,7 @@
 
 - name: Create config file
   template:
-    src: config.yml.j2
+    src: config.yaml.j2
     dest: /etc/rancher/rke2/config.yml
 
 - name: download rke2 binary
