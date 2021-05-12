@@ -9,6 +9,12 @@
     url: "https://github.com/rancher/rke2/releases/download/{{ rke_version | urlencode }}/rke2-images.linux-amd64.tar.gz"
     dest: /var/lib/rancher/rke2/agent/images/rke2-images.linux-amd64.tar.gz
 
+# - name: Unarchive the gz file
+#   unarchive:
+#     src: /var/lib/rancher/rke2/agent/images/rke2-images.linux-amd64.tar.gz
+#     dest: /var/lib/rancher/rke2/agent/images/rke2-images.linux-amd64.tar
+#     remote_src: yes
+
 - name: Create an rke2 directory
   file:
     path: /etc/rancher/rke2
@@ -29,3 +35,27 @@
     dest: /usr/local/bin/rke2
     mode: a+x
 
+- name: Create a temp directory
+  file:
+    path: /tmp/rke2_files
+    state: directory
+
+- name: download the files for systemd
+  unarchive: 
+    src: "https://github.com/rancher/rke2/releases/download/{{ rke_version | urlencode }}/rke2.linux-amd64.tar.gz"
+    dest: /tmp/rke2_files
+    remote_src: yes
+
+- name: copy service files under systemd
+  copy:
+    src: "/tmp/rke2_files/lib/systemd/system/{{ item }}"
+    dest: /etc/systemd/system/
+    remote_src: yes
+  with_items:
+    - rke2-server.service
+    - rke2-agent.service
+
+- name: remove files from tmp
+  file:
+    path: /tmp/rke2_files
+    state: absent
